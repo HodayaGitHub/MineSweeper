@@ -1,0 +1,47 @@
+.game-board {
+    /* border: solid 1px; */
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+
+}
+
+.board-cells{
+    border: solid 1px;
+}
+
+
+.cell{
+    width: 60px;
+    height: 60px;
+    border: solid 1px;
+}
+
+.mine {
+    /* background-color: lightblue; */
+    width: 60px;
+    height: 60px;
+    background-color: lightblue;
+}
+
+.neighbors {
+    background-color: lightblue;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+
+    width: 100%;
+    left: 0;
+    font-size: 1.5rem;
+    background-color: rgb(62, 176, 214); 
+    color: #fff;           
+    text-align: center;    
+    padding: 5px;      
+}
+
+.no-mines-around {
+    background-color: gray;
+}
