@@ -1,15 +1,18 @@
 'use strict'
 
 var gGameBoard
-const ROWS_AMOUNT = 4
-const COLS_AMOUNT = 4
+var ROWS_AMOUNT
+var COLS_AMOUNT
+var gameLevel = 4
+var gIsVictory = false
 
-const MINE_IMG = `<img class="mine" src='img/mine.png'>`
-const FLAG_IMG = `<img class="mine" src='img/flag.png'>`
+const MINE_IMG = `<img class="mine" src="img/mine3.png">`
+const FLAG_IMG = `<img class="flag" src="img/flag.png">`
+
 
 var currentCell = null
-var gMinesOnBoard = 0
-
+var gMinesOnBoard = null
+var gFlagsCount 
 
 var gGame = {
     isOn: true,
@@ -20,20 +23,24 @@ var gGame = {
 
 
 function onInit() {
-    gGameBoard = createGameBoard()
+    createGameBoard(gameLevel)
     renderGameBoard()
-    addMines(3)
     onRightClick()
+    gFlagsCount = 2
+    addMines()
 }
 
-// creating the board for the model
-function createGameBoard() {
-    const board = []
 
-    for (var row = 0; row < ROWS_AMOUNT; row++) {
+// creating the board for the model
+function createGameBoard(gameLevel) {
+    gameLevel = gameLevel
+    console.log('test row' + gameLevel);
+    console.log('test col' + gameLevel);
+    const board = []
+    for (var row = 0; row < gameLevel; row++) {
         board[row] = []
         // console.log(board[row])
-        for (var col = 0; col < COLS_AMOUNT; col++) {
+        for (var col = 0; col < gameLevel; col++) {
             const cell = {
                 row,
                 col,
@@ -47,7 +54,7 @@ function createGameBoard() {
             board[row][col] = cell
         }
     }
-    return board
+    gGameBoard = board
 }
 
 // creating the table - DOM 
@@ -86,8 +93,11 @@ function onRightClick() {
                 return
             }
 
-            var rowIdx = clickedCell.getAttribute('data-row');
-            var colIdx = clickedCell.getAttribute('data-col');
+            if (gIsVictory) {
+                return
+            }
+            var rowIdx = clickedCell.getAttribute('data-row')
+            var colIdx = clickedCell.getAttribute('data-col')
             const cellIdx = (gGameBoard[rowIdx][colIdx])
 
             // If the cell has a shown value of how many mines Around Count, there shouldn't be an option to flag this cell
@@ -95,30 +105,52 @@ function onRightClick() {
                 return
             }
 
-            if (!cellIdx.isMarked) {
 
+            if (!cellIdx.isMarked && !gIsVictory) {
                 // model - 
                 // to change isMarked to true
+                // checks that the flags amount is equal to the mines amount
+                if (gGame.markedCount >= gMinesOnBoard) {
+                    console.log('you are not allowed to add more flags')
+                    return
+                }
+
                 cellIdx.isMarked = true
+                gFlagsCount--
 
                 // to add 1 to the gGame markedCount - flags.
                 gGame.markedCount++
 
                 // DOM - 
                 clickedCell.innerHTML = FLAG_IMG
+                clickedCell.classList.add('flag')
+
 
             } else {
                 // at second click:
                 cellIdx.isMarked = false
                 gGame.markedCount--
+                gFlagsCount++
                 clickedCell.innerHTML = ''
+                clickedCell.classList.remove('flag')
+                document.querySelector('.flags-amount').innerHTML = `You have ${gFlagsCount} flags to use`
+                console.log(document.querySelector('.flags-amount').innerHTML)
             }
-            console.log(gGame.markedCount)
 
-            // console.log('Right mouse button clicked on this cell:', clickedCell)
+
+            // checks if the the cell contains a mine & is flagged
+            if (cellIdx.isMarked && cellIdx.isMine) {
+                console.log('flagged correctly')
+                gFlagsCount--
+            }
+
+            console.log(gGame.markedCount)
+            console.log('Right clicked:', clickedCell)
+
+            document.querySelector('.flags-amount').innerHTML = `You have ${gFlagsCount} flags to use`
+            console.log(document.querySelector('.flags-amount').innerHTML)
         })
     })
-
 }
 
 
@@ -126,13 +158,40 @@ function onCellClicked(elCell, rowIdx, colIdx) {
     if (!gGame.isOn) {
         return
     }
+
+
+    if (gIsVictory) {
+        return
+    }
+
+    // If mines have not been added, call the addMines function
+    // first clicked cell will never contain a mine 
+    // set timeout to solve the issue of the mines that is generated too fast  
+    if (gMinesOnBoard === null) {
+        setTimeout(function () {
+            addMines(gameLevel);
+            revealCellContent(gGameBoard, rowIdx, colIdx)
+        }, 200);
+    }
+
+    console.log(gMinesOnBoard)
+
     const cell = gGameBoard[rowIdx][colIdx]
     console.log('Cell clicked: ', elCell, rowIdx, colIdx)
+
+    if (cell.isMarked) {
+        cell.isMarked = false
+        gFlagsCount++
+        gGame.markedCount--
+        document.querySelector('.flags-amount').innerHTML = `You have ${gFlagsCount} flags to use`
+        console.log(document.querySelector('.flags-amount').innerHTML)
+    }
 
     // disable click on a visible mines 
     if (cell.isShown) {
         return
     }
+
 
     cell.isShown = true
 
@@ -140,6 +199,11 @@ function onCellClicked(elCell, rowIdx, colIdx) {
         gameOver()
     } else {
         revealCellContent(gGameBoard, rowIdx, colIdx)
+        gGame.shownCount++
+
+        // test-------------------
+        setTimeout(isVictory, 200)
+
     }
 }
 
@@ -175,10 +239,28 @@ function revealCellContent(board, row, col) {
 }
 
 
-function addMines(minesAmount) {
+function addMines(gameLevel) {
+    var strHTML = ''
+
+    if (gameLevel === 4) {
+        gMinesOnBoard = 2
+        gFlagsCount = 2
+    } else if (gameLevel === 8) {
+        gMinesOnBoard = 14
+        gFlagsCount = 14
+    } else if (gameLevel === 12) {
+        gMinesOnBoard = 32
+        gFlagsCount = 32
+    }
+
+    var minesToCreate = gMinesOnBoard
+    console.log('nies to create" + minesToCreate')
+    // Update DOM:
+    strHTML = `<h2> There are ${gMinesOnBoard} mines on the board</h2>`
+    document.querySelector('.mines-amount').innerHTML = strHTML
 
     // add mines as long as the isMine is false 
-    while (minesAmount > 0) {
+    while (minesToCreate > 0) {
         var randomRow = getRandomInt(0, gGameBoard.length - 1)
         var randomCol = getRandomInt(0, gGameBoard[0].length - 1)
         if (!gGameBoard[randomRow][randomCol].isMine) {
@@ -187,15 +269,18 @@ function addMines(minesAmount) {
             // Update the model:
             gGameBoard[randomRow][randomCol].isMine = true
 
-            gMinesOnBoard++
-            minesAmount--;
+            // gMinesOnBoard++
+            minesToCreate--;
+
 
 
             // --------------------------------- for testing -----------------------------
-            // var elRandomCell = document.querySelector(`.cell-${randomRow}-${randomCol}`)
-            // elRandomCell.innerHTML = MINE_IMG
+            var elRandomCell = document.querySelector(`.cell-${randomRow}-${randomCol}`)
+            elRandomCell.innerHTML = MINE_IMG
         }
     }
+
+    console.log('mines on board ' + gMinesOnBoard)
 }
 
 
@@ -210,9 +295,80 @@ function gameOver() {
                 // Update DOM 
                 var elRandomCell = document.querySelector(`.cell-${rowIdx}-${colIdx}`)
                 elRandomCell.innerHTML = MINE_IMG
+                // document.querySelector('.game-over-overlay').classList.remove('hidden')
             }
         }
+
     }
-    alert('game over')
+    gameStatus()
+}
+
+
+function chooseLevelBtn(elBtn) {
+    gameLevel = parseInt(elBtn.getAttribute('data-level'))
+    createGameBoard(gameLevel)
+    renderGameBoard()
+    addMines(gameLevel)
+    
+    var cells = document.querySelectorAll('.cell');
+
+    cells.forEach(function(cell) {
+        cell.classList.add('expert');
+    });
+
+    document.querySelector('.flags-amount').innerHTML = `You have ${gFlagsCount} flags to use`
+}
+
+// isVictory(gGameBoard)
+function isVictory() {
+    var boardSize = gameLevel ** 2
+    var cellsAmount = boardSize - gMinesOnBoard
+
+    if (gGame.shownCount === cellsAmount) {
+        // alert('victory')
+        gIsVictory = true
+        gameStatus()
+        return
+    }
+
+}
+
+
+function gameStatus() {
+    var gameStatusBtn = document.querySelector('.game-status-btn')
+    var currentSrc = gameStatusBtn.getAttribute('src')
+    var statusTitle = document.querySelector('.game-status-title')
+
+    if (gIsVictory) {
+        var newSrc = currentSrc.replace("img/good-status.png", "img/win.png")
+        gameStatusBtn.setAttribute('src', newSrc)
+        gameStatusBtn.classList.add('win')
+        statusTitle.innerHTML = 'You win! Tickle me to restart'
+
+    } if (!gGame.isOn) {
+        var newSrc = currentSrc.replace("img/good-status.png", "img/sad.png")
+        gameStatusBtn.setAttribute('src', newSrc)
+        statusTitle.innerHTML = 'You lose! Tickle me to restart'
+    }
+
+}
+
+
+// to reduce lines here and to fix the functions gameStatus() && restartBtn()
+
+function restartBtn() {
+    onInit()
+    var statusTitle = document.querySelector('.game-status-title')
+    var gameStatusBtn = document.querySelector('.game-status-btn')
+    var currentSrc = gameStatusBtn.getAttribute('src')
+    var newSrc = currentSrc.replace("img/sad.png", "img/good-status.png")
+
+    if (currentSrc === "img/win.png"){
+        newSrc = currentSrc.replace("img/win.png", "img/good-status.png")
+        gameStatusBtn.classList.remove('win')
+    }
+
+    gameStatusBtn.setAttribute('src', newSrc)
+    statusTitle.innerHTML = 'Tickle me to restart'
 
 }

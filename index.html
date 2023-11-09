@@ -14,22 +14,49 @@
 <body onload="onInit()">
 
     <!-- table that is created using renderGameBoard() function -->
+
+    <div class="choose-level">
+        <h2 class="choose-level-title"> Choose a level</h2>
+        <div class="level-btns">
+            <button class="level-btn" data-level="4" onclick="chooseLevelBtn(this)">Beginner</button>
+            <button class="level-btn" data-level="8" onclick="chooseLevelBtn(this)">Medium</button>
+            <button class="level-btn" data-level="12" onclick="chooseLevelBtn(this)">Expert</button>
+        </div>
+        <h2 class="flags-amount">You have 2 flags to use</h2>
+    </div>
+
+    <div class="mines-amount">
+        <h2> There are 2 mines on the board</h2>
+    </div>
+
+    <div class="game-status">
+
+        <img class="game-status-btn" onclick="restartBtn()" src="img/good-status.png">
+        <h2 class="game-status-title">Tickle me to restart</h2>
+    </div>
+
+    <!-- <div class="restart-div">
+            <img class="restart-btn" onclick="restartBtn()">
+    
+        </div> -->
+
     <div class="game-board">
         <table>
             <tbody class="board-cells">
             </tbody>
 
-
     </div>
-
-
-
 
 
 
     <div class="footer">
         <p>Hodaya Ovadia - Mine Sweeper</p>
     </div>
+
+    <div class="game-over-overlay hidden">
+        <!-- <div class="overlay-img"></div> -->
+    </div>
+
 
     <script src="js/utils.js"></script>
     <script src="js/app.js"></script>
