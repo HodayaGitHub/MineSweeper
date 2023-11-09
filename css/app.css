@@ -1,53 +1,113 @@
-body{
+* {
+    box-sizing: border-box;
+
+}
+
+body {
+  position: relative;
+}
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-image: url('/img/background-pic.jpg');
     background-size: cover;
     background-repeat: no-repeat;
-    background-attachment: fixed; 
+    background-attachment: fixed;
+    opacity: 0.8; 
+    z-index: -1; 
 }
 
 .game-board {
+
     /* border: solid 1px; */
-    /* max-width: 1280px; */
+    max-width: 80%;
     display: flex;
     justify-content: center;
     margin: 0 auto;
     /* padding: 150px; */
     margin-top: 5px;
     /* opacity: 0.5; */
+    /* flex-direction: column-reverse; */
+    gap: 50px;
+    /* justify-content: space-between; */
 
 }
 
+.table {
+    /* justify-content: center; */
+    /* display: flex; */
+    justify-content: center;
+    /* left: 200px; */
+    /* margin-right: 770px; */
+}
+
+.expert-board .table {
+    margin-right: 265px;
+
+}
+
+.player-status {
+    display: flex;
+    margin-top: 32px;
+    justify-content: top;
+    flex-direction: column;
+    color: black;
+    font-size: 24px;
+    gap: 20px;
+    font-weight: 900;
+    /* align-self: left; */
+    /* justify-content: flex-start; */
+    max-width: 200px;
+    /* position: relative; */
+}
+
+
+.hint-btn{
+    height: 80px;
+    width: 78px;
+}
+
+
+
 .board-cells {
     border: solid 1px;
-    background-color: rgb(187, 206, 209);
+    background-color: rgb(207 112 148);
+}
+
+.board-row {
+    /* background-color: pink; */
+    max-width: 500px;
 }
 
 
 .cell {
     width: 80px;
     height: 80px;
-    /* width: fit-content;
-    height: fit-content; */
-    border: solid 1px;
-    border-radius: 30px;
+
     text-align: center;
+    box-shadow: 1px 1px 5px 5px #0000001a;
 }
 
 .mine {
     /* background-color: lightblue; */
     width: 54px;
-    height: 54px;
+    height: 39px;
     /* background-color: lightblue; */
     /* transition: opacity 0.5s ease-in-out; */
 }
 
 .flag {
     /* background-color: lightblue; */
-    width: 80px;
-    height: 75px;
+    width: 60px;
+    height: 55px;
     /* background-color: lightblue; */
     /* transition: opacity 0.5s ease-in-out; */
 }
+
 .neighbors {
     background-color: lightblue;
 }
@@ -60,9 +120,9 @@ body{
     left: 0;
     font-size: 2rem;
     /* background-color: rgb(62, 176, 214); */
-    color: #f3f3f3;
+    color: #e26e6e;
     text-align: center;
-    padding: 5px;
+    /* padding: 5px; */
     opacity: 0.7;
 }
 
@@ -74,9 +134,6 @@ body{
 .choose-level {
     width: 100%;
     height: 100px;
-
-    display: flex;
-    flex-direction: column;
 }
 
 .choose-level-title {
@@ -98,19 +155,14 @@ body{
     justify-content: center;
     align-items: center;
 
-    background-color: rgb(62, 176, 214);
+    background-color: rgb(207 112 148);
     color: #fff;
-
+    border-radius: 10px;
     width: 100px;
     height: 50px;
 
 }
 
-.mines-amount {
-    display: flex;
-    margin-top: 32px;
-    justify-content: center;
-}
 
 .game-over-overlay {
     position: fixed;
@@ -146,9 +198,19 @@ body{
 
 } */
 
-.expert{
-width: 60px;
-height: 50px;
+.expert {
+    width: 60px;
+    height: 50px;
+}
+
+.expert-board {
+    width: 1290px;
+
+}
+
+.expert-board .cell {
+    width: 60px;
+    height: 50px;
 }
 
 .expert .mine {
@@ -156,14 +218,21 @@ height: 50px;
     width: 30px;
 }
 
-.flags-amount{
+
+
+/* .game-board .expert{
+    width: 1290px;
+    background-color: #e26e6e;
+} */
+
+.flags-amount {
     justify-content: center;
     align-items: center;
     margin: 0 auto;
 }
 
 
-.game-status{
+.game-status {
     width: 100%;
     height: 100px;
     display: flex;
@@ -183,7 +252,11 @@ height: 50px;
     justify-content: center;
 }
 
-.game-status-btn.win{
+.game-status-btn.win {
     height: 100px;
     width: 130px;
+}
+
+.selected {
+    background-color: yellow;
 }
