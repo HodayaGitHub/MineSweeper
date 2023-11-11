@@ -42,6 +42,11 @@ function onInit() {
     onRightClick()
     restartTimer()
     renderHints()
+    
+    var strHtml = `<img class="game-status-btn" onclick="restartBtn()" src="img/good-status.png">
+    <h2 class="game-status-title">Tickle me to restart</h2>
+     </div>`
+    document.querySelector('.game-status').innerHTML = strHtml
 }
 
 function initMinesAndFlags() {
@@ -371,6 +376,7 @@ function chooseLevelBtn(elBtn) {
     gGameLevel = parseInt(elBtn.getAttribute('data-level'))
     var cells = document.querySelectorAll('.cell');
 
+
     if (gGameLevel === 4) {
         document.querySelector('.game-board').classList.remove('expert-board')
         document.querySelector('.game-board').classList.remove('meduim-board')
@@ -417,7 +423,7 @@ function isVictory() {
     }
 }
 
-
+// TODO: refactor 
 function gameStatus() {
     var gameStatusBtn = document.querySelector('.game-status-btn')
     var currentSrc = gameStatusBtn.getAttribute('src')
@@ -427,12 +433,13 @@ function gameStatus() {
         var newSrc = currentSrc.replace("img/good-status.png", "img/win.png")
         gameStatusBtn.classList.add('win')
         statusTitle.innerHTML = 'You win! Tickle me to restart'
-
+        
     } else if (!gGame.isOn) {
         var newSrc = currentSrc.replace("img/good-status.png", "img/sad.png")
         statusTitle.innerHTML = 'You lose! Tickle me to restart'
     }
-
+    
+    // gameStatusBtn.setAttribute(newSrc, "img/good-status.png")
     gameStatusBtn.setAttribute('src', newSrc)
 }
 
@@ -448,8 +455,7 @@ function restartBtn() {
     if (currentSrc === "img/win.png") {
         newSrc = currentSrc.replace("img/win.png", "img/good-status.png")
         gameStatusBtn.classList.remove('win')
-    }
-
+    } 
     gameStatusBtn.setAttribute('src', newSrc)
     statusTitle.innerHTML = 'Tickle me to restart'
 
