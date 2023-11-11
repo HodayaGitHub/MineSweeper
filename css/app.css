@@ -27,6 +27,10 @@ body::before {
 
 }
 
+h2.game-status-title {
+    font-size: 35px;
+}
+
 .image-overlay {
     position: fixed;
     top: -16%;
@@ -84,7 +88,7 @@ span {
 
 .table {
     position: relative;
-    left: 11%;
+    left: 12%;
     border-radius: 8px;
 }
 
